@@ -225,17 +225,17 @@ export function codePointLabel(cp) {
 export function explain(cp) {
     if ((cp >= 0x2400 && cp <= 0x241F) || cp === DELETE_SYMBOL) {
         const control = cp === DELETE_SYMBOL ? 0x7F : cp - 0x2400;
-        return 'Control character ' + codePointLabel(control) + ' shown as a symbol.';
+        return '控制字符 ' + codePointLabel(control) + ' 以符号显示。';
     }
     if (cp === BIDI_SUBSTITUTE) {
-        return 'A bidirectional override character, replaced because it could make the line '
-            + 'display in a different order than it is stored.';
+        return '双向覆盖字符，已替换，因为它可能使行'
+            + '以与存储不同的顺序显示。';
     }
     if (cp === REPLACEMENT) {
-        return 'Bytes that are not valid text in the file\'s character set, or a U+FFFD character written in the file.';
+        return '文件字符集中的无效文本字节，或文件中写入的 U+FFFD 字符。';
     }
     if (isInvisibleButPresent(cp)) {
-        return 'An invisible character that is present in the text.';
+        return '文本中存在的一个不可见字符。';
     }
     return null;
 }

@@ -62,26 +62,26 @@ export const SEPARATOR = ' ' + String.fromCharCode(0xB7) + ' ';
 export function positionLabel(firstLine, lines, totalLines, startOffset, endOffset, contentLength, atEnd) {
     let label;
     if (firstLine != null && lines > 0) {
-        label = 'Lines ' + count(firstLine) + '-' + count(firstLine + lines - 1);
-        if (totalLines != null) label += ' of ' + count(totalLines);
+        label = '第 ' + count(firstLine) + '-' + count(firstLine + lines - 1);
+        if (totalLines != null) label += ' 行，共 ' + count(totalLines);
     } else {
-        label = 'Bytes ' + count(startOffset) + '-' + count(endOffset);
-        label += contentLength != null ? ' of ' + count(contentLength) : ' (total size not known yet)';
+        label = '字节 ' + count(startOffset) + '-' + count(endOffset);
+        label += contentLength != null ? ' 行，共 ' + count(contentLength) : ' （总大小尚未确定）';
     }
     const atStart = startOffset <= 0;
-    if (atStart && atEnd) return label + SEPARATOR + 'whole file';
-    if (atStart) return label + SEPARATOR + 'start of file';
-    if (atEnd) return label + SEPARATOR + 'end of file';
+    if (atStart && atEnd) return label + SEPARATOR + '整个文件';
+    if (atStart) return label + SEPARATOR + '文件开头';
+    if (atEnd) return label + SEPARATOR + '文件末尾';
     return label;
 }
 
 /** What to say when a page starts or ends inside a line; empty when it does neither. */
 export function midLineNotes(startsMidLine, endsMidLine) {
     if (startsMidLine && endsMidLine) {
-        return 'The first line continues from the previous page and the last line continues on the next page.';
+        return '首行续至上一页，末行续至下一页。';
     }
-    if (startsMidLine) return 'The first line continues from the previous page.';
-    if (endsMidLine) return 'The last line continues on the next page.';
+    if (startsMidLine) return '首行续至上一页。';
+    if (endsMidLine) return '末行续至下一页。';
     return '';
 }
 
@@ -158,7 +158,7 @@ export function modifiedText(file) {
     const at = inEngineZone(file.lastModified, file.timeZoneId, file.timeZoneLabel);
     if (at === null) return '';
     if (at.zone !== '') return at.date + ' ' + at.time + ' ' + at.zone;
-    return at.date + ' ' + at.time + (file.timeZoneLabel ? ' ' + file.timeZoneLabel : '') + ' (engine time)';
+    return at.date + ' ' + at.time + (file.timeZoneLabel ? ' ' + file.timeZoneLabel : '') + ' （引擎时间）';
 }
 
 /** The sentence of the snapshot strip for the active file, or '' when the page has no read time. */
@@ -166,13 +166,13 @@ export function snapshotText(file, readAt) {
     if (!file || readAt == null) return '';
     const clock = clockInZone(readAt, file.timeZoneId, file.timeZoneLabel);
     if (clock.text === '') return '';
-    return 'Snapshot of ' + file.name + ' taken at ' + clock.text
-        + (clock.exact ? ' (engine time)' : ' (engine time not known)') + '. It does not update by itself.';
+    return '快照：' + file.name + ' 拍摄于 ' + clock.text
+        + (clock.exact ? ' （引擎时间）' : ' （引擎时间未知）') + '。此快照不会自动更新。';
 }
 
 /** The toolbar's time zone label for a file, or '' when the server did not say. */
 export function zoneText(file) {
-    return file && file.timeZoneLabel ? 'Times are engine time: ' + file.timeZoneLabel : '';
+    return file && file.timeZoneLabel ? '时间为引擎时间：' + file.timeZoneLabel : '';
 }
 
 /* ---- wire shapes ------------------------------------------------------------- */
@@ -389,16 +389,16 @@ function blank(s) {
 
 function forbidden(download) {
     if (download) {
-        return 'You do not have access to download log files. Your role needs the Download Log Files '
-            + 'permission and must not be limited to specific channels.';
+        return '您没有下载日志文件的权限。您的角色需要"下载日志文件"'
+            + ' 权限，且不能仅限于特定通道。';
     }
-    return 'You do not have access to log files. Your role needs the View Log Files permission '
-        + 'and must not be limited to specific channels.';
+    return '您没有访问日志文件的权限。您的角色需要"查看日志文件"权限'
+        + '，且不能仅限于特定通道。';
 }
 
 function withDownloadHint(text, canDownload) {
     const sentence = text.endsWith('.') ? text : text + '.';
-    return canDownload ? sentence + ' You can download the file instead.' : sentence;
+    return canDownload ? sentence + ' 您可以改为下载该文件。' : sentence;
 }
 
 /**
@@ -411,7 +411,7 @@ export function saveName(name) {
 
 /** What the notice says when a file that can only be downloaded is opened. */
 export function notViewableText(file, canDownload) {
-    return withDownloadHint(file.name + ' cannot be viewed here.' + (file.note ? ' ' + file.note : ''), canDownload);
+    return withDownloadHint(file.name + ' 无法在此处查看。' + (file.note ? ' ' + file.note : ''), canDownload);
 }
 
 /** True when the error is the engine's 409 STALE: the file the request named is gone, or is a different file now. */
@@ -427,25 +427,25 @@ export function fileIsGone(shownFileId, files) {
 
 /** The notice for a file on screen that no longer exists under its name. */
 export function goneNotice(name) {
-    return name + ' no longer exists under that name: a log rollover renamed or removed it after you opened it.'
-        + ' The page shown is kept so you can finish reading it, but it can\'t be paged or downloaded.';
+    return name + ' 已不再使用原名称：日志轮转在您打开后将其重命名或移除。'
+        + ' 当前显示的页面已保留以便您完成阅读，但无法继续翻页或下载。';
 }
 
 /** The label of the notice's button that opens the file now holding the name. */
 export function goneOpenLabel(name) {
-    return 'Open the current ' + name;
+    return '打开当前的 ' + name;
 }
 
 /** The tooltip of every control that is disabled because the file on screen is gone. */
 export function goneTooltip(name) {
-    return name + ' no longer exists under that name. Open a file from the list.';
+    return name + ' 已不再使用原名称。请从列表中打开一个文件。';
 }
 
 /** A download whose body stopped short. The viewer cannot tell a cut file from a dropped connection. */
-export const DOWNLOAD_CUT_SHORT = 'The download stopped before the whole file arrived, so nothing was saved. Try again.';
+export const DOWNLOAD_CUT_SHORT = '下载在整个文件接收完成之前中断，因此未保存任何内容。请重试。';
 
 /** A busy refusal that came without the engine's own text. */
-const BUSY_MESSAGE = 'The engine is busy. Try again in a moment.';
+const BUSY_MESSAGE = '引擎正忙，请稍后重试。';
 
 /**
  * What the notice bar says about a failed request, and whether it offers a
@@ -474,30 +474,30 @@ export function noticeFrom(error, download, canDownload) {
 
     switch (kind) {
         case 'STALE':
-            return { message: 'This file has rotated since it was listed.', refresh: true };
+            return { message: '此文件在列出后已发生轮转。', refresh: true };
         case 'BUSY':
             // The engine's text says which limit is in force.
             return { message: blank(text) ? BUSY_MESSAGE : text, refresh: false };
         case 'TOO_LARGE':
             return {
-                message: withDownloadHint(blank(text) ? 'This file is too large to view here.' : text, canDownload),
+                message: withDownloadHint(blank(text) ? '此文件太大，无法在此处查看。' : text, canDownload),
                 refresh: false
             };
         case 'NOT_VIEWABLE':
             return {
-                message: withDownloadHint(blank(text) ? 'This file cannot be viewed here.' : text, canDownload),
+                message: withDownloadHint(blank(text) ? '此文件无法在此处查看。' : text, canDownload),
                 refresh: false
             };
         case 'CHANNEL_RESTRICTED':
             return { message: forbidden(download), refresh: false };
         case 'BAD_REQUEST':
         case 'READ_FAILED':
-            return { message: blank(text) ? 'The server could not complete the request.' : text, refresh: false };
+            return { message: blank(text) ? '服务器无法完成请求。' : text, refresh: false };
         default:
             break;
     }
     if (kind != null) {
-        return { message: blank(text) ? 'The server refused the request.' : text, refresh: false };
+        return { message: blank(text) ? '服务器拒绝了请求。' : text, refresh: false };
     }
 
     // No typed body: go by the status, then by whatever message there is.
@@ -505,35 +505,35 @@ export function noticeFrom(error, download, canDownload) {
     if (status === 401) {
         // A download is a plain fetch, so the host's own sign-in prompt has not run for it (see log-download.js).
         return {
-            message: download ? 'Your session has ended. Sign in again, then download the file.'
-                : 'Your session has expired. Sign in again.',
+            message: download ? '您的会话已结束。请重新登录，然后下载文件。'
+                : '您的会话已过期。请重新登录。',
             refresh: false
         };
     }
     if (status === 404 || status === 501) {
         return {
-            message: 'The OIE Log Viewer plugin is not installed on this engine.',
+            message: '此引擎上未安装 OIE 日志查看器插件。',
             refresh: false
         };
     }
-    if (status === 409) return { message: 'This file has rotated since it was listed.', refresh: true };
+    if (status === 409) return { message: '此文件在列出后已发生轮转。', refresh: true };
     // The server sends 429 when its search or page-read limit is reached. A bare 502, 503 or 504
     // comes from the gateway or proxy in front of the engine, not from this plugin.
     if (status === 429) return { message: BUSY_MESSAGE, refresh: false };
     if (status === 422) {
-        return { message: withDownloadHint('This file is too large to view here', canDownload), refresh: false };
+        return { message: withDownloadHint('此文件太大，无法在此处查看', canDownload), refresh: false };
     }
     if (status === 502 || status === 503 || status === 504) {
-        return { message: 'The engine could not be reached.', refresh: false };
+        return { message: '无法连接到引擎。', refresh: false };
     }
     if (status !== null) {
         return {
-            message: (download ? 'The download failed' : 'The engine returned an error') + ' (HTTP ' + status + ').',
+            message: (download ? '下载失败' : '引擎返回了错误') + ' (HTTP ' + status + ').',
             refresh: false
         };
     }
     const own = error && error.message;
-    return { message: blank(own) ? 'The request failed.' : String(own), refresh: false };
+    return { message: blank(own) ? '请求失败。' : String(own), refresh: false };
 }
 
 /* ---- request sequencing ------------------------------------------------------ */
@@ -576,7 +576,7 @@ export function navState(page, file, busy, gone) {
 }
 
 /** The tooltip of Next page and Last page at the end of the active file. */
-export const SNAPSHOT_END_TIP = 'This is the end of the snapshot. Load latest lines shows anything written since.';
+export const SNAPSHOT_END_TIP = '这是快照的末尾。"加载最新行"可显示此后写入的内容。';
 
 /** The list the server sent, with the active file first (a stable sort, otherwise the server's order). */
 export function activeFirst(files) {
@@ -647,16 +647,16 @@ export function highlightParams(params) {
  * The notice when Monaco did not load and the viewer stays the plain textarea. It paints no
  * highlights, so the highlight notes are not shown with it either.
  */
-export const PLAIN_TEXT_NOTICE = 'The full editor did not load, so this page is shown as plain text without highlights '
-    + 'or line numbers when wrapped. Reloading the page may help.';
+export const PLAIN_TEXT_NOTICE = '完整编辑器未能加载，因此此页面以纯文本显示，无高亮'
+    + '，换行时不显示行号。重新加载页面可能有所帮助。';
 
 /** The note shown when the engine stopped highlighting a page early, by why it stopped; '' when it did not. */
 export function highlightStopNote(stopped) {
     switch (stopped) {
-        case 'MATCH_LIMIT': return 'Only the first 5,000 matches on this page are highlighted.';
-        case 'TIME_LIMIT': return 'Highlighting reached its 2-second limit, so only part of this page is highlighted.';
+        case 'MATCH_LIMIT': return '仅高亮显示此页面上的前 5,000 个匹配项。';
+        case 'TIME_LIMIT': return '高亮处理达到了 2 秒限制，因此仅部分页面被高亮。';
         case 'TOO_COMPLEX':
-            return 'The search pattern is too complex for a line on this page, so only part of it is highlighted.';
+            return '搜索模式对于此页面上的某行过于复杂，因此仅部分被高亮。';
         default: return '';
     }
 }

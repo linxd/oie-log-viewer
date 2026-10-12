@@ -103,16 +103,16 @@ export function useDownload({ alive, shownRef, currentRef, goneRef, setNotice, e
                 fetched = blob;
                 return blob;
             }, () => {
-                if (!alive.current || controller.signal.aborted) throw new Error('Download cancelled.');
+                if (!alive.current || controller.signal.aborted) throw new Error('下载已取消。');
             });
             // saveFile returns quietly when the user closes the save dialog; only a fetched file was saved.
             if (alive.current) {
-                setDownloadNote(fetched ? 'Saved ' + file.name + ' (' + bytes(fetched.size) + ').' : '');
+                setDownloadNote(fetched ? '已保存 ' + file.name + ' (' + bytes(fetched.size) + ')。' : '');
             }
         } catch (e) {
             if (!alive.current) return;
             if (controller.signal.aborted) {
-                setDownloadNote('Download cancelled.');
+                setDownloadNote('下载已取消。');
             } else if (isStale(e) && shownRef.current && shownRef.current.file === file) {
                 // The file on screen is gone: the same state as when a page request finds it so.
                 enterGone(file, null);

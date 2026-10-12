@@ -1,9 +1,13 @@
 {
     "id": "oie-log-viewer",
-    "name": "OIE Log Viewer",
+    "name": "OIE 日志查看器",
     "version": "1.0.0",
     "author": "Diridium Technologies Inc.",
-    "description": "View, page through, search and download the engine's log files.",
-    "oie": { "apiMin": "4.6" },
-    "client": { "entry": "web/plugin.js" }
+    "description": "查看、分页浏览、搜索和下载引擎的日志文件。",
+    "oie": {
+        "apiMin": "4.6"
+    },
+    "client": {
+        "entry": "web/plugin.js"
+    }
 }
