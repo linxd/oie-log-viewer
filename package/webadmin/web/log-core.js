@@ -66,7 +66,7 @@ export function positionLabel(firstLine, lines, totalLines, startOffset, endOffs
         if (totalLines != null) label += ' 行，共 ' + count(totalLines);
     } else {
         label = '字节 ' + count(startOffset) + '-' + count(endOffset);
-        label += contentLength != null ? ' 行，共 ' + count(contentLength) : ' （总大小尚未确定）';
+        label += contentLength != null ? '，共 ' + count(contentLength) : ' （总大小尚未确定）';
     }
     const atStart = startOffset <= 0;
     if (atStart && atEnd) return label + SEPARATOR + '整个文件';
@@ -397,7 +397,8 @@ function forbidden(download) {
 }
 
 function withDownloadHint(text, canDownload) {
-    const sentence = text.endsWith('.') ? text : text + '.';
+    // Chinese sentences end with '。'; treat it like '.' so no extra period is appended.
+    const sentence = text.endsWith('.') || text.endsWith('。') ? text : text + '.';
     return canDownload ? sentence + ' 您可以改为下载该文件。' : sentence;
 }
 
@@ -521,7 +522,7 @@ export function noticeFrom(error, download, canDownload) {
     // comes from the gateway or proxy in front of the engine, not from this plugin.
     if (status === 429) return { message: BUSY_MESSAGE, refresh: false };
     if (status === 422) {
-        return { message: withDownloadHint('此文件太大，无法在此处查看', canDownload), refresh: false };
+        return { message: withDownloadHint('此文件太大，无法在此处查看。', canDownload), refresh: false };
     }
     if (status === 502 || status === 503 || status === 504) {
         return { message: '无法连接到引擎。', refresh: false };

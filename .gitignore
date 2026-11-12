@@ -9,12 +9,14 @@ target
 # Signing configuration (machine-specific, contains secrets)
 yubikey-pkcs11.cfg
 certchain.pem
-# What RELEASING.md has the signer make in the clone's root
-/check/
+# What RELEASING.md's checks make if run in the clone's root
+/check-*/
 /*.zip
 /*.zip.sha256
 *.swp
 wiki/
+# Python bytecode from running e2e/run.py locally
+__pycache__/
 
 # Git worktrees created for parallel agent work during development
 .claude/worktrees/

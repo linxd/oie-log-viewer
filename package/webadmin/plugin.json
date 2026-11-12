@@ -1,7 +1,7 @@
 {
     "id": "oie-log-viewer",
     "name": "OIE 日志查看器",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": "Diridium Technologies Inc.",
     "description": "查看、分页浏览、搜索和下载引擎的日志文件。",
     "oie": {

@@ -8,12 +8,12 @@
 
 ## 功能特性
 
-- **自动发现日志** — 根据引擎自身的 log4j 配置查找日志：当前活跃的 `mirth.log` and
-  及其轮转的 `.zip` or `.gz` 归档文件，按最新优先排序，包括按日期命名的文件夹中的归档。无需手动输入路径，引擎也不会接受客户端提供的路径。
-- **每页 1,000 行** — 带行号和位置提示，如 "Lines 2,001-3,000 of
+- **自动发现日志** — 根据引擎自身的 log4j 配置查找日志：当前活跃的 `mirth.log`
+  及其轮转的 `.zip` 或 `.gz` 归档文件，按最新优先排序，包括按日期命名的文件夹中的归档。无需手动输入路径，引擎也不会接受客户端提供的路径。
+- **每页 1,000 行** — 带行号和位置提示，如 "第 2,001-3,000 行，共
   11,905"。活跃文件打开时显示最新行，归档文件从第一行开始。
 - **原始行尾** LF、CRLF 和 HL7 段落之间的单独 CR 各自作为行尾，段落不会连在一起。一键切换自动换行和特殊字符视图，控制字符和不可读字节显示为可见符号。从查看器复制时保留原始行尾。
-- **搜索所有文件** — 先统计每个文件中的匹配行数，然后打开文件's 时每次显示 1,000 行。支持纯文本或 Java 正则表达式，在引擎上逐行匹配，匹配项在当前页面上高亮显示。
+- **搜索所有文件** — 先统计每个文件中的匹配行数，然后打开文件时每次显示 1,000 行。支持纯文本或 Java 正则表达式，在引擎上逐行匹配，匹配项在当前页面上高亮显示。
 - **当前页查找** — 在当前屏幕显示的行中快速查找。
 - **下载** — 按磁盘上的原始内容下载任何文件；归档文件以其 zip 格式下载。
 - **引擎时间** 时间以引擎所在时区显示，查看器会说明使用的是哪个时区。
@@ -22,7 +22,7 @@
 ## 在哪里找到
 
 - Swing 管理界面： **Other** 任务面板，**查看日志文件**。
-- Web 管理界面： **Log Files** 监控下的 **日志文件**。
+- Web 管理界面：Monitor（监控）下的 **Log Files**（日志文件）。
 
 ## 权限与审计
 
@@ -60,14 +60,16 @@ throughout.
 
 |属性|值|
 |-----------|-------|
-| OIE version | 4.6.0 (the engine loads an extension only on the version it was built for) |
-| Java | 17 |
-| Web Administrator | The [Web Support](https://github.com/gibson9583/oie-web-support-plugin) plugin, which serves extension UIs from the engine |
+| OIE 版本 | 4.7.0（引擎只加载与其构建版本一致的扩展） |
+| Java | 17 或 21 |
+| Web 管理界面 | [Web Support](https://github.com/gibson9583/oie-web-support-plugin) 插件（需使用与 OIE 版本相同的发行版），由引擎提供扩展 UI 服务 |
+
+仍在运行 OIE 4.6.0？请使用 [OIE 日志查看器 1.0.0](https://github.com/diridium-com/oie-log-viewer/releases/tag/v1.0.0)。
 
 ## 安装
 
 从社区商店安装，或从
-[Releases](https://github.com/diridium-com/oie-log-viewer/releases) 页面下载 zip，通过管理界面的'扩展视图安装。重启引擎以激活。
+[Releases](https://github.com/diridium-com/oie-log-viewer/releases) 页面下载 zip，通过管理界面的扩展视图安装。重启引擎以激活。
 
 ## 设计说明
 
@@ -80,10 +82,12 @@ throughout.
 mvn -B -ntp clean package
 ```
 
-The script installs the four OIE 4.6.0 engine jars the plugin compiles against into your local
-Maven repository, taken from the published OIE 4.6.0 distribution and cached under
+The script installs the four OIE 4.7.0 engine jars the plugin compiles against into your local
+Maven repository, taken from the published OIE 4.7.0 distribution and cached under
 `~/.cache/oie-dist`. The first build downloads Node.js to build the web administrator UI. The
 installable zip is `package/target/oie-log-viewer-<version>.zip`.
+
+CI 还会运行 `e2e/run.py`：它通过引擎自带的安装程序将 zip 安装到已发布的引擎中，并在引擎支持的每种数据库上使用该插件。其文档字符串说明了如何在本地运行。
 
 ## 致谢
 
