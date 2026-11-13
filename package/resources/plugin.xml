@@ -3,12 +3,12 @@
 <!-- Copyright (c) 2026 Diridium Technologies Inc. -->
 
 <pluginMetaData path="oie-log-viewer">
-    <name>OIE Log Viewer</name>
+    <name>OIE 日志查看器</name>
     <author>Diridium Technologies Inc.</author>
     <pluginVersion>${project.version}</pluginVersion>
     <mirthVersion>${plugin.supported.mc.versions}</mirthVersion>
     <url>https://github.com/diridium-com/oie-log-viewer</url>
-    <description>View, page through, search and download the engine's log files from the Administrator.</description>
+    <description>在管理员客户端中查看、翻页、搜索和下载引擎的日志文件。</description>
 
     <clientClasses>
         <string>com.diridium.logviewer.LogViewerClientPlugin</string>
